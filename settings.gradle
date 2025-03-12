@@ -1,0 +1,9 @@
+rootProject.name = 'generative-ai-with-testcontainers'
+
+include '1-streaming'
+include '2-augmented-generation'
+include '3-embeddings'
+include '4-rag'
+include '5-ollama'
+include '6-testing'
+include '7-dockermodel'
