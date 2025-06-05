@@ -15,8 +15,7 @@ class HowToTest3 {
 	static ValidatorAgent validatorAgent;
 
 	final static String reference = """
-			- Answer must indicate that you can enable verbose logging in Testcontainers Desktop by setting the property cloud.logs.verbose to true in the ~/.testcontainers.properties file
-			- Answer must indicate that you can enable verbose logging in Testcontainers Desktop by adding the --verbose flag when running the cli
+			- Answer must indicate that Lewis Hamilton won the Great Britain Grand Prix.
 			""";
 
 	@BeforeAll

@@ -16,7 +16,7 @@ class HowToTest2 {
     @BeforeAll
     static void setUp() {
         referenceResponse = embeddingModel().embed(
-                        "To enable verbose logging in Testcontainers Desktop you can set the property cloud.logs.verbose to true in the ~/.testcontainers.properties file file or add the --verbose flag when running the cli")
+                        "Lewis Hamilton won the Great Britain Grand Prix on 07 Jul 2024 driving for Mercedes")
                 .content();
     }
 
@@ -30,7 +30,7 @@ class HowToTest2 {
         double similarity = CosineSimilarity.between(referenceResponse, currentResponse);
 
         log.info("Similarity: {}", similarity);
-        assertTrue(similarity > 0.8, "similarity was " + similarity);
+        assertTrue(similarity > 0.9, "similarity was " + similarity);
     }
 
     @Test
@@ -43,7 +43,7 @@ class HowToTest2 {
         double similarity = CosineSimilarity.between(referenceResponse, currentResponse);
 
         log.info("Similarity: {}", similarity);
-        assertTrue(similarity > 0.8, "similarity was " + similarity);
+        assertTrue(similarity > 0.9, "similarity was " + similarity);
     }
 
 }

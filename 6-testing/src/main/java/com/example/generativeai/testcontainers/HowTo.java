@@ -7,29 +7,29 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HowTo extends Base {
 
-	static String question = "How I can enable verbose logging in Testcontainers Desktop?";
+    static String question = "In F1 2024 season which driver won the Great Britain Grand Prix?";
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		String straightAnswer = getStraightAnswer();
-		log.info("Question: {} - Straight Answer: {}", question, straightAnswer);
+        String straightAnswer = getStraightAnswer();
+        log.info("Question: {} - Straight Answer: {}", question, straightAnswer);
 
-		String raggedAnswer = getRaggedAnswer();
-		log.info("Question: {} - Ragged Answer: {}", question, raggedAnswer);
+        String raggedAnswer = getRaggedAnswer();
+        log.info("Question: {} - Ragged Answer: {}", question, raggedAnswer);
 
-	}
+    }
 
-	public static String getStraightAnswer() {
-		ChatAgent straight = AiServices.builder(ChatAgent.class).chatLanguageModel(chatModel()).build();
-		return straight.chat(question);
-	}
+    public static String getStraightAnswer() {
+        ChatAgent straight = AiServices.builder(ChatAgent.class).chatLanguageModel(chatModel()).build();
+        return straight.chat(question);
+    }
 
-	public static String getRaggedAnswer() {
-		ChatAgent ragged = AiServices.builder(ChatAgent.class)
-			.chatLanguageModel(chatModel())
-			.contentRetriever(contentRetriever())
-			.build();
-		return ragged.chat(question);
-	}
+    public static String getRaggedAnswer() {
+        ChatAgent ragged = AiServices.builder(ChatAgent.class)
+                .chatLanguageModel(chatModel())
+                .contentRetriever(contentRetriever())
+                .build();
+        return ragged.chat(question);
+    }
 
 }

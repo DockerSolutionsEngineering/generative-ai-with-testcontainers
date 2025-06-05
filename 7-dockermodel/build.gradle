@@ -6,4 +6,6 @@ mainClassName = 'com.example.generativeai.testcontainers.Streaming'
 
 dependencies {
     implementation 'dev.langchain4j:langchain4j-open-ai'
+    implementation 'org.testcontainers:testcontainers:1.21.0'
+    implementation 'io.rest-assured:rest-assured:5.5.1'
 }

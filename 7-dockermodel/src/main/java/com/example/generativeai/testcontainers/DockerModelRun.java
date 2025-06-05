@@ -4,32 +4,26 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import io.restassured.RestAssured;
 import lombok.extern.slf4j.Slf4j;
+import org.testcontainers.containers.DockerModelRunnerContainer;
 
 import java.util.List;
 
 @Slf4j
 public class DockerModelRun {
 
-    // Before running this code, make sure you followed the instructions from the  Customer Zero Release of the Docker Model Runner:
-    // https://www.notion.so/dockerinc/Customer-Zero-Release-1af57a1d4673805b8572e61c9cbd45af#1af57a1d4673807bbe0ad575f10fa194
-    // You need to:
-    // 1. Pull a Model
-    //      docker model pull ignaciolopezluna020/llama3.2:1b
-    // 2. Use a helper container as a reverse-proxy to use the model from the host with TCP
-    //      docker run -d --name model-runner-proxy -p 8080:80 alpine/socat tcp-listen:80,fork,reuseaddr tcp:ml.docker.internal:80
-
-
     public static void main(String[] args) {
-        String baseUrl = "http://localhost:8080/ml/llama.cpp/v1"; // Local API URL
-        String modelName = "ignaciolopezluna020/llama3.2:1b"; // Model name
-        String apiKey = "your-api-key"; // If required, otherwise omit
+        String baseUrl = "http://localhost:12434/engines/llama.cpp/v1";
+        String modelName = "ai/gemma3"; // Model name
 
         // Initialize the Langchain4j OpenAI-compatible model
         OpenAiChatModel model = OpenAiChatModel.builder()
                 .baseUrl(baseUrl)
                 .modelName(modelName)
-                .apiKey(apiKey) // Remove this line if no API key is needed
+                .apiKey("not needed")
+                .logRequests(true)
+                .logResponses(true)
                 .build();
 
         // Construct messages

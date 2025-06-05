@@ -6,15 +6,16 @@ import dev.langchain4j.data.document.splitter.DocumentByParagraphSplitter;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.ollama.OllamaChatModel;
-import dev.langchain4j.model.ollama.OllamaEmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.pgvector.PgVectorEmbeddingStore;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.ollama.OllamaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.net.URISyntaxException;
@@ -27,79 +28,73 @@ import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.load
 
 public class Base {
 
-	static String model = "llama3.2";
-	static String tag = "3b";
-	static String modelName = "%s:%s".formatted(model, tag);
+    static String baseUrl = "http://localhost:12434/engines/llama.cpp/v1";
+    static String modelName = "ai/gemma3";
 
-	//Custom LLM, can be replaced with the GPT, Sonnet, etc.
-	static ChatLanguageModel chatModel() {
-		OllamaContainer ollamaContainer = new OllamaContainer(
-				DockerImageName.parse("ilopezluna/%s:0.3.13-%s".formatted(model, tag))
-					.asCompatibleSubstituteFor("ollama/ollama"))
-			.withReuse(true);
-		ollamaContainer.start();
-		return OllamaChatModel.builder()
-			.baseUrl(ollamaContainer.getEndpoint())
-			.modelName(modelName)
-			.temperature(0d)
-			.topK(1)
-			.seed(42)
-			.logRequests(true)
-			.build();
-	}
+    //Custom LLM, can be replaced with the GPT, Sonnet, etc.
+    static ChatLanguageModel chatModel() {
+        // Initialize the Langchain4j OpenAI-compatible model
+        return OpenAiChatModel.builder()
+                .baseUrl(baseUrl)
+                .modelName(modelName)
+                .apiKey("not-needed")
+                .logRequests(true)
+                .logResponses(true)
+                .build();
+    }
 
-	//RAG
-	static ContentRetriever contentRetriever() {
-		var store = store();
-		var model = embeddingModel();
-		List<Document> txtDocuments = loadDocumentsRecursively(toPath("knowledge/txt/"), new TextDocumentParser());
+    //RAG
+    static ContentRetriever contentRetriever() {
+        var store = store();
+        var model = embeddingModel();
+        List<Document> txtDocuments = loadDocumentsRecursively(toPath("knowledge/json"), new TextDocumentParser());
 
-		EmbeddingStoreIngestor.builder()
-			.embeddingStore(store)
-			.embeddingModel(model)
-			.documentSplitter(new DocumentByParagraphSplitter(1024, 100))
-			.build()
-			.ingest(txtDocuments);
+        EmbeddingStoreIngestor.builder()
+                .embeddingStore(store)
+                .embeddingModel(model)
+                .documentSplitter(new DocumentByParagraphSplitter(1024, 100))
+                .build()
+                .ingest(txtDocuments);
 
-		return EmbeddingStoreContentRetriever.builder()
-			.embeddingModel(model)
-			.embeddingStore(store)
-			.maxResults(3)
-			.minScore(0.7)
-			.build();
-	}
+        return EmbeddingStoreContentRetriever.builder()
+                .embeddingModel(model)
+                .embeddingStore(store)
+                .maxResults(3)
+                .minScore(0.7)
+                .build();
+    }
 
-	private static Path toPath(String fileName) {
-		try {
-			URL fileUrl = Base.class.getClassLoader().getResource(fileName);
-			return Paths.get(fileUrl.toURI());
-		}
-		catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    private static Path toPath(String fileName) {
+        try {
+            URL fileUrl = Base.class.getClassLoader().getResource(fileName);
+            return Paths.get(fileUrl.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public static EmbeddingModel embeddingModel() {
-		var ollama = new OllamaContainer(
-				DockerImageName.parse("ilopezluna/all-minilm:0.3.13-22m").asCompatibleSubstituteFor("ollama/ollama"))
-			.withReuse(true);
-		ollama.start();
-		return OllamaEmbeddingModel.builder().baseUrl(ollama.getEndpoint()).modelName("all-minilm:22m").build();
-	}
+    public static EmbeddingModel embeddingModel() {
+        return OpenAiEmbeddingModel.builder()
+                .baseUrl("http://localhost:12434/engines/llama.cpp/v1")
+                .apiKey("not-needed")
+                .modelName("ai/mxbai-embed-large")
+                .build();
+    }
 
-	private static EmbeddingStore<TextSegment> store() {
-		var pgVector = new PostgreSQLContainer<>(
-				DockerImageName.parse("pgvector/pgvector:pg16").asCompatibleSubstituteFor("postgres"));
-		pgVector.start();
-		return PgVectorEmbeddingStore.builder()
-			.host(pgVector.getHost())
-			.port(pgVector.getFirstMappedPort())
-			.database(pgVector.getDatabaseName())
-			.user(pgVector.getUsername())
-			.password(pgVector.getPassword())
-			.table("test")
-			.dimension(384)
-			.build();
-	}
+    private static EmbeddingStore<TextSegment> store() {
+        var pgVector = new PostgreSQLContainer<>(
+                DockerImageName.parse("pgvector/pgvector:pg16").asCompatibleSubstituteFor("postgres"));
+        pgVector.start();
+
+        return PgVectorEmbeddingStore.builder()
+                .host(pgVector.getHost())
+                .port(pgVector.getFirstMappedPort())
+                .database(pgVector.getDatabaseName())
+                .user(pgVector.getUsername())
+                .password(pgVector.getPassword())
+                .table("test")
+                .dimension(1024)
+                .build();
+    }
 
 }

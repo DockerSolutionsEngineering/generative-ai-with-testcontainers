@@ -7,7 +7,7 @@ dependencies {
     implementation 'org.testcontainers:ollama'
     implementation 'org.testcontainers:postgresql'
     implementation 'dev.langchain4j:langchain4j'
-    implementation 'dev.langchain4j:langchain4j-ollama'
     implementation 'dev.langchain4j:langchain4j-pgvector'
     implementation 'dev.langchain4j:langchain4j-open-ai'
+    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 }
