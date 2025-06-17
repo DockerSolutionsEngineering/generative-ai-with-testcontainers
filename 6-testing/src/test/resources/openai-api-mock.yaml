@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  title: OpenAI API
+  version: "1.0"
+  description: Mock OpenAI API for testing
+servers:
+  - url: https://api.openai.com/v1
+paths:
+  /chat/completions:
+    post:
+      summary: Create chat completion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                messages:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                success_response:
+                  summary: Successful chat completion
+                  value:
+                    id: "chatcmpl-123"
+                    object: "chat.completion"
+                    created: 1677652288
+                    model: "gpt-3.5-turbo"
+                    choices:
+                      - index: 0
+                        message:
+                          role: "assistant"
+                          content: "Microcks says: Max Verstappen won the 2024 British GP."
+                        finish_reason: "stop"
+                    usage:
+                      prompt_tokens: 12
+                      completion_tokens: 20
+                      total_tokens: 32

@@ -8,13 +8,11 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.pgvector.PgVectorEmbeddingStore;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -30,6 +28,17 @@ public class Base {
 
     static String baseUrl = "http://localhost:12434/engines/llama.cpp/v1";
     static String modelName = "ai/gemma3";
+    static String embeddingBaseUrl = "http://localhost:12434/engines/llama.cpp/v1";
+    static String embeddingModelName = "ai/mxbai-embed-large";
+
+    public Base() {
+    }
+
+    // Overloaded constructor for testing chat model only
+    public Base(String chatBaseUrl, String chatModelName) {
+        Base.baseUrl = chatBaseUrl;
+        Base.modelName = chatModelName;
+    }
 
     //Custom LLM, can be replaced with the GPT, Sonnet, etc.
     static ChatLanguageModel chatModel() {
@@ -75,9 +84,9 @@ public class Base {
 
     public static EmbeddingModel embeddingModel() {
         return OpenAiEmbeddingModel.builder()
-                .baseUrl("http://localhost:12434/engines/llama.cpp/v1")
+                .baseUrl(embeddingBaseUrl)
                 .apiKey("not-needed")
-                .modelName("ai/mxbai-embed-large")
+                .modelName(embeddingModelName)
                 .build();
     }
 
