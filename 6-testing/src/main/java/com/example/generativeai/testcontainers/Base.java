@@ -25,23 +25,14 @@ import java.util.List;
 import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocumentsRecursively;
 
 public class Base {
-
-    static String baseUrl = "http://localhost:12434/engines/llama.cpp/v1";
-    static String modelName = "ai/gemma3";
     static String embeddingBaseUrl = "http://localhost:12434/engines/llama.cpp/v1";
     static String embeddingModelName = "ai/mxbai-embed-large";
 
     public Base() {
     }
 
-    // Overloaded constructor for testing chat model only
-    public Base(String chatBaseUrl, String chatModelName) {
-        Base.baseUrl = chatBaseUrl;
-        Base.modelName = chatModelName;
-    }
-
     //Custom LLM, can be replaced with the GPT, Sonnet, etc.
-    static ChatLanguageModel chatModel() {
+    static ChatLanguageModel chatModel(String modelName, String baseUrl) {
         // Initialize the Langchain4j OpenAI-compatible model
         return OpenAiChatModel.builder()
                 .baseUrl(baseUrl)

@@ -10,8 +10,9 @@ import static com.example.generativeai.testcontainers.Base.embeddingModel;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
-class HowToTest2 {
+class GetAnswerAgentTest2 {
     static Embedding referenceResponse;
+    static String question = "In F1 2024 season which driver won the Great Britain Grand Prix?";
 
     @BeforeAll
     static void setUp() {
@@ -22,7 +23,7 @@ class HowToTest2 {
 
     @Test
     void getStraightAnswer() {
-        String straightAnswer = HowTo.getStraightAnswer();
+        String straightAnswer = new GetAnswerAgent().getStraightAnswer(question);
         log.info("Straight Answer: {}", straightAnswer);
 
         Embedding currentResponse = embeddingModel().embed(straightAnswer).content();
@@ -35,7 +36,7 @@ class HowToTest2 {
 
     @Test
     void getRaggedAnswer() {
-        String raggedAnswer = HowTo.getRaggedAnswer();
+        String raggedAnswer = new GetAnswerAgent().getRaggedAnswer(question);
         log.info("Ragged Answer: {}", raggedAnswer);
 
         Embedding currentResponse = embeddingModel().embed(raggedAnswer).content();
