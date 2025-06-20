@@ -41,7 +41,7 @@ paths:
                       - index: 0
                         message:
                           role: "assistant"
-                          content: "Lewis Hamilton won the 2024 Galaxy GP as par of the USS Enterprise team."
+                          content: "Lewis Hamilton won the 2024 Galaxy GP as part of the USS Enterprise team."
                         finish_reason: "stop"
                     usage:
                       prompt_tokens: 12

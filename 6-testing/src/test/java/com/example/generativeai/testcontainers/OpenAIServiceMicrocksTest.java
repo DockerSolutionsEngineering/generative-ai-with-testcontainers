@@ -32,7 +32,9 @@ class OpenAIServiceMicrocksTest {
 
     @BeforeAll
     static void setUp() {
+        //Get Microcks URL
         microcksUrl = microcks.getRestMockEndpoint("OpenAI API", "1.0");
+        //Set up the Validator Agent
         String baseValidatorUrl = "http://localhost:12434/engines/llama.cpp/v1";
         String validatorModelName = "ai/gemma3";
         validatorAgent = AiServices.builder(ValidatorAgent.class)
@@ -42,8 +44,8 @@ class OpenAIServiceMicrocksTest {
 
     @Test
     void testModelHallucinate() {
-        GetAnswerAgent getAnswerAgentAgent = new GetAnswerAgent(microcksUrl, "hallucinate");
-        String response = getAnswerAgentAgent.getStraightAnswer(question);
+        GetAnswerAgent getAnswerAgent = new GetAnswerAgent(microcksUrl, "hallucinate");
+        String response = getAnswerAgent.getStraightAnswer(question);
         log.info("Straight Answer: {}", response);
 
         ValidatorAgent.ValidatorResponse validate = validatorAgent.validate(question, response, reference);
