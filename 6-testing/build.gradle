@@ -14,3 +14,7 @@ dependencies {
     implementation 'dev.langchain4j:langchain4j-open-ai'
     implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 }
+
+application {
+    mainClass = 'com.example.generativeai.testcontainers.GetAnswerAgent'
+}

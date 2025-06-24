@@ -5,7 +5,7 @@
         </encoder>
     </appender>
 
-    <logger name="dev.langchain4j" level="DEBUG"/>
+    <logger name="dev.langchain4j" level="INFO"/>
 
     <root level="info">
         <appender-ref ref="STDOUT" />

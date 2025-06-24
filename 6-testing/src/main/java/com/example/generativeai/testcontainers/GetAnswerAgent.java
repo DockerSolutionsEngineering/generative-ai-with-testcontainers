@@ -15,7 +15,6 @@ public class GetAnswerAgent extends Base {
     public GetAnswerAgent() {
     }
 
-    // Overloaded constructor for testing chat model only
     public GetAnswerAgent(String chatBaseUrl, String chatModelName) {
         this.baseUrl = chatBaseUrl;
         this.modelName = chatModelName;
