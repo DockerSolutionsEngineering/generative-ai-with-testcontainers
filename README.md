@@ -11,7 +11,7 @@ It demonstrates how to use Testcontainers to create a seamless development envir
 3. `3-embeddings`: Contains an example of generating embeddings from text and calculating similarity between them.
 4. `4-rag`: Contains an example of applying RAG (Retrieval-Augmented Generation) to generate better responses.
 5. `5-ollama`: Contains an example of using a custom model with ollama with testcontainers
-6. `6-testing`: Contains an example of 3 approaches to test Models: String comparison, Vector comparison, Validator agent
+6. `6-testing`: Contains an example of 3 approaches to test Models: String comparison, Vector comparison, Validator agent. Also includes an example of how to mock model responses using Microcks.
 7. `7-dockermodel`: Contains an example of interacting with llama3.2 model that is running with Docker Model Runner
 
 ## Prerequisites
@@ -31,7 +31,7 @@ It demonstrates how to use Testcontainers to create a seamless development envir
     ```sh
     ./gradlew build
     ```
-3. Create .env file in the root of the project and add your OPENAI_API_KEY there:
+3. For modules 1-4: Create .env file in the root of the project and add your OPENAI_API_KEY there:
    ``` OPENAI_API_KEY=your_key_value_starting_from_sk-proj-...```
 
 ## Running the Examples
